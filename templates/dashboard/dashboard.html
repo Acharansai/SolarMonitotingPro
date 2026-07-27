@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h4 class="mb-4">
+    Welcome, {{ request.user.first_name|default:request.user.username }}
+</h4>
+
+<!-- Summary Cards -->
+
+<div class="row">
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <h6>Power</h6>
+                <h3>{{ power }} kW</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <h6>Voltage</h6>
+                <h3>{{ voltage }} V</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <h6>Current</h6>
+                <h3>{{ current }} A</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <h6>Temperature</h6>
+                <h3>{{ temperature }} °C</h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-md-6 mb-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <h6>Irradiance</h6>
+                <h3>{{ irradiance }} W/m²</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <h6>Last Updated</h6>
+                <h5>{{ created_at }}</h5>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Charts -->
+
+<div class="row mt-4">
+
+    <!-- Power -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h5>⚡ Power Trend</h5>
+                <canvas id="powerChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Temperature -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h5>🌡 Temperature Trend</h5>
+                <canvas id="temperatureChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voltage -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h5>🔌 Voltage Trend</h5>
+                <canvas id="voltageChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Current -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h5>⚡ Current Trend</h5>
+                <canvas id="currentChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+const labels = JSON.parse('{{ labels|escapejs }}');
+const powerValues = JSON.parse('{{ power_values|escapejs }}');
+
+new Chart(document.getElementById('powerChart'), {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Power (kW)',
+            data: powerValues,
+            borderWidth: 2,
+            tension: 0.4,
+            fill: false
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true
+    }
+});
+
+</script>
+
+{% endblock %}

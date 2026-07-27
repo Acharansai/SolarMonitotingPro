@@ -1,0 +1,46 @@
+<nav class="navbar navbar-expand-lg bg-white shadow-sm px-4">
+
+    <div class="container-fluid">
+
+        <h4 class="mb-0">Dashboard</h4>
+
+        <div class="dropdown">
+
+            <button
+                class="btn btn-light dropdown-toggle"
+                data-bs-toggle="dropdown">
+
+                👤 {{ request.user.username }}
+
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end">
+
+                <li>
+                    <a class="dropdown-item" href="#">
+                        Profile
+                    </a>
+                </li>
+
+                <li>
+                    <a class="dropdown-item" href="#">
+                        Change Password
+                    </a>
+                </li>
+
+                <li><hr class="dropdown-divider"></li>
+
+                <li>
+                    <a class="dropdown-item text-danger"
+                       href="{% url 'accounts:logout' %}">
+                        Logout
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>

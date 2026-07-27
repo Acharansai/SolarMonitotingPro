@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolarMonitorPro Login</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+
+<div class="login-container">
+
+    <div class="login-left">
+        <h1>☀ SolarMonitorPro</h1>
+        <p>Solar Plant Monitoring System</p>
+
+        <ul>
+            <li>✔ Live Monitoring</li>
+            <li>✔ Smart Alerts</li>
+            <li>✔ Reports & Analytics</li>
+            <li>✔ Secure Access</li>
+        </ul>
+    </div>
+
+    <div class="login-right">
+
+        <div class="login-card">
+
+            <h2>Welcome Back</h2>
+            <p>Please sign in to continue</p>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    {{ form.username }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.password }}
+                </div>
+
+                <button class="btn btn-success w-100">
+                    Login
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

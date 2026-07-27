@@ -1,0 +1,33 @@
+body{
+    background:#f5f7fa;
+}
+
+.main-content{
+    margin-left:250px;
+}
+
+.nav-link{
+    border-radius:8px;
+}
+
+.nav-link:hover{
+    background:#198754;
+}
+
+.card{
+    border-radius:15px;
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+.card h6{
+    color:#6c757d;
+}
+
+.card h2{
+    font-weight:bold;
+    color:#198754;
+}
