@@ -1,14 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.template import context
-from monitoring.models import SensorData
+from monitoring.models import LiveSolarData
 import json
 
 
 @login_required
 def home(request):
 
-    latest = SensorData.objects.order_by("-timestamp").first()
+    latest = LiveSolarData.objects.order_by("-created_at").first()
 
     if latest:
         context = {
@@ -16,8 +15,8 @@ def home(request):
             "current": latest.current,
             "power": latest.power,
             "temperature": latest.temperature,
-            "irradiance": getattr(latest, "irradiance", 0),
-            "created_at": latest.timestamp,
+            "irradiance": latest.irradiance,
+            "created_at": latest.created_at,
         }
     else:
         context = {
@@ -29,15 +28,15 @@ def home(request):
             "created_at": None,
         }
 
-    readings = SensorData.objects.order_by("-timestamp")[:20]
+    readings = LiveSolarData.objects.order_by("-created_at")[:20]
     readings = list(readings)[::-1]
 
-    labels = [reading.timestamp.strftime("%H:%M:%S") for reading in readings]
+    labels = [r.created_at.strftime("%H:%M:%S") for r in readings]
 
-    power_values = [float(reading.power) for reading in readings]
-    temperature_values = [float(reading.temperature) for reading in readings]
-    voltage_values = [float(reading.voltage) for reading in readings]
-    current_values = [float(reading.current) for reading in readings]
+    power_values = [float(r.power) for r in readings]
+    temperature_values = [float(r.temperature) for r in readings]
+    voltage_values = [float(r.voltage) for r in readings]
+    current_values = [float(r.current) for r in readings]
 
     context["labels"] = json.dumps(labels)
     context["power_values"] = json.dumps(power_values)
