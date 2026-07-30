@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from monitoring.models import LiveSolarData
 import json
+from django.http import JsonResponse
 
 
 @login_required
@@ -45,3 +46,20 @@ def home(request):
     context["current_values"] = json.dumps(current_values)
 
     return render(request, "dashboard/dashboard.html", context)
+
+@login_required
+def live_data(request):
+
+    latest = LiveSolarData.objects.order_by("-created_at").first()
+
+    if latest:
+        return JsonResponse({
+            "voltage": float(latest.voltage),
+            "current": float(latest.current),
+            "power": float(latest.power),
+            "temperature": float(latest.temperature),
+            "irradiance": float(latest.irradiance),
+            "created_at": latest.created_at.strftime("%Y-%m-%d %H:%M:%S")
+        })
+
+    return JsonResponse({})

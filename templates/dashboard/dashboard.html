@@ -14,7 +14,7 @@
         <div class="card shadow-sm border-0">
             <div class="card-body text-center">
                 <h6>Power</h6>
-                <h3>{{ power }} kW</h3>
+                <h3 id="power">{{ power }} kW</h3>
             </div>
         </div>
     </div>
@@ -23,7 +23,7 @@
         <div class="card shadow-sm border-0">
             <div class="card-body text-center">
                 <h6>Voltage</h6>
-                <h3>{{ voltage }} V</h3>
+                <h3 id="voltage">{{ voltage }} V</h3>
             </div>
         </div>
     </div>
@@ -32,7 +32,7 @@
         <div class="card shadow-sm border-0">
             <div class="card-body text-center">
                 <h6>Current</h6>
-                <h3>{{ current }} A</h3>
+                <h3 id="current">{{ current }} A</h3>
             </div>
         </div>
     </div>
@@ -41,7 +41,7 @@
         <div class="card shadow-sm border-0">
             <div class="card-body text-center">
                 <h6>Temperature</h6>
-                <h3>{{ temperature }} °C</h3>
+                <h3 id="temperature">{{ temperature }} °C</h3>
             </div>
         </div>
     </div>
@@ -54,7 +54,7 @@
         <div class="card shadow-sm border-0">
             <div class="card-body text-center">
                 <h6>Irradiance</h6>
-                <h3>{{ irradiance }} W/m²</h3>
+                <h3 id="irradiance">{{ irradiance }} W/m²</h3>
             </div>
         </div>
     </div>
@@ -63,7 +63,7 @@
         <div class="card shadow-sm border-0">
             <div class="card-body text-center">
                 <h6>Last Updated</h6>
-                <h5>{{ created_at }}</h5>
+                <h5 id="created_at">{{ created_at }}</h5>
             </div>
         </div>
     </div>
@@ -141,4 +141,39 @@ new Chart(document.getElementById('powerChart'), {
 
 </script>
 
+<script>
+
+function updateDashboard(){
+
+    fetch("/dashboard/live-data/")
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        document.getElementById("power").innerHTML =
+            data.power + " kW";
+
+        document.getElementById("voltage").innerHTML =
+            data.voltage + " V";
+
+        document.getElementById("current").innerHTML =
+            data.current + " A";
+
+        document.getElementById("temperature").innerHTML =
+            data.temperature + " °C";
+
+        document.getElementById("irradiance").innerHTML =
+            data.irradiance + " W/m²";
+
+        document.getElementById("created_at").innerHTML =
+            data.created_at;
+
+    });
+
+}
+
+setInterval(updateDashboard,5000);
+
+</script>
 {% endblock %}
