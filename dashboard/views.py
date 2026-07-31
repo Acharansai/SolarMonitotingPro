@@ -63,3 +63,20 @@ def live_data(request):
         })
 
     return JsonResponse({})
+
+from django.db.models import Q
+
+def reports(request):
+    reports = LiveSolarData.objects.all()
+
+    start = request.GET.get('start_date')
+    end = request.GET.get('end_date')
+
+    if start and end:
+        reports = reports.filter(timestamp__date__range=[start, end])
+
+    reports = reports.order_by('-timestamp')
+
+    return render(request, 'reports.html', {
+        'reports': reports
+    })
