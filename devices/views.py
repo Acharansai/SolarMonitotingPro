@@ -2,9 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 
-
-from .models import Device, SolarPlant
 from .forms import DeviceForm, SolarPlantForm
+from .models import Device, SolarPlant
 
 
 @login_required

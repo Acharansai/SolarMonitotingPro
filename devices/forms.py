@@ -1,6 +1,6 @@
 from django import forms
-from .models import Device
-from .models import SolarPlant
+
+from .models import Device, SolarPlant
 
 
 class DeviceForm(forms.ModelForm):

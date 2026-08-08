@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class LiveSolarData(models.Model):
     voltage = models.DecimalField(max_digits=5, decimal_places=2)
     current = models.DecimalField(max_digits=5, decimal_places=2)

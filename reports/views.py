@@ -1,21 +1,19 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.shortcuts import render
 from django.http import HttpResponse
-
-from devices.models import SolarPlant, Device
-from monitoring.models import SensorData
-
+from django.shortcuts import render
 from openpyxl import Workbook
-
 from reportlab.lib import colors
-from reportlab.lib.pagesizes import landscape, A4
+from reportlab.lib.pagesizes import A4, landscape
+from reportlab.lib.units import mm
 from reportlab.platypus import (
     SimpleDocTemplate,
     Table,
     TableStyle,
 )
-from reportlab.lib.units import mm
+
+from devices.models import Device, SolarPlant
+from monitoring.models import SensorData
 
 
 @login_required

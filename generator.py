@@ -1,10 +1,12 @@
 import os
-import django
 import random
 import time
 from datetime import datetime
-from devices.models import Device
+
+import django
+
 from alerts.services import check_alerts
+from devices.models import Device
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()

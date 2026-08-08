@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import SolarPlant, Device
+
+from .models import Device, SolarPlant
 
 
 @admin.register(SolarPlant)

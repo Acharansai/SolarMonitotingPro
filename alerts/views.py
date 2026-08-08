@@ -1,15 +1,13 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
 from django.core.paginator import Paginator
-
-from .models import Alert
-from openpyxl import Workbook
 from django.http import HttpResponse
-
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from django.shortcuts import render
+from openpyxl import Workbook
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.platypus import Paragraph
+from reportlab.platypus import Paragraph, SimpleDocTemplate, Table, TableStyle
+
+from .models import Alert
 
 
 @login_required
