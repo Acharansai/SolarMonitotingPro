@@ -25,4 +25,5 @@ urlpatterns = [
     path("devices/", include("devices.urls")),
     path("monitoring/", include("monitoring.urls")),
     path("reports/", include("reports.urls")),
+    path("settings/", include("settings_app.urls")),
 ]

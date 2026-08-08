@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if messages %}
+
+    {% for message in messages %}
+
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+
+            ✅ {{ message }}
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+            </button>
+
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+
+<div class="container-fluid">
+
+    <h2 class="fw-bold mb-2">
+        ⚙️ Settings
+    </h2>
+    <p class="text-muted mb-4">
+        Manage your account settings
+    </p>
+
+
+    <div class="row g-4">
+
+        <!-- User Information -->
+
+        <div class="col-md-6">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-4">
+                        👤 User Information
+                    </h5>
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-bold">
+                            Username
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            value="{{ user.username }}"
+                            readonly>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-bold">
+                            First Name
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            value="{{ user.first_name }}"
+                            readonly>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-bold">
+                            Last Name
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            value="{{ user.last_name }}"
+                            readonly>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-bold">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            class="form-control"
+                            value="{{ user.email }}"
+                            readonly>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Change Password -->
+
+        <div class="col-md-6">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-4">
+                        🔐 Change Password
+                    </h5>
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-bold">
+                                Current Password
+                            </label>
+
+                            {{ password_form.old_password }}
+
+                        </div>
+
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-bold">
+                                New Password
+                            </label>
+
+                            {{ password_form.new_password1 }}
+
+                        </div>
+
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-bold">
+                                Confirm New Password
+                            </label>
+
+                            {{ password_form.new_password2 }}
+
+                        </div>
+
+
+                        {% if password_form.errors %}
+
+                            <div class="alert alert-danger">
+
+                                {% for field in password_form %}
+
+                                    {% for error in field.errors %}
+
+                                        <div>
+                                            {{ error }}
+                                        </div>
+
+                                    {% endfor %}
+
+                                {% endfor %}
+
+                                {% for error in password_form.non_field_errors %}
+
+                                    <div>
+                                        {{ error }}
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary">
+
+                            🔐 Change Password
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+</div>
+{% endblock %}
