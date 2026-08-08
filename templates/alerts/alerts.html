@@ -1,0 +1,334 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4 fw-bold">
+    🚨 Alerts
+</h2>
+
+<!-- Filter Form -->
+
+<form method="GET" class="row g-3 mb-4">
+
+    <div class="col-md-3">
+        <label class="form-label">Start Date</label>
+        <input
+            type="date"
+            name="start_date"
+            value="{{ start }}"
+            class="form-control">
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">End Date</label>
+        <input
+            type="date"
+            name="end_date"
+            value="{{ end }}"
+            class="form-control">
+    </div>
+
+    <div class="col-md-3">
+
+        <label class="form-label">Severity</label>
+
+        <select
+            name="severity"
+            class="form-select">
+
+            <option value="">All</option>
+
+            <option value="INFO"
+            {% if severity == "INFO" %}selected{% endif %}>
+                Info
+            </option>
+
+            <option value="WARNING"
+            {% if severity == "WARNING" %}selected{% endif %}>
+                Warning
+            </option>
+
+            <option value="CRITICAL"
+            {% if severity == "CRITICAL" %}selected{% endif %}>
+                Critical
+            </option>
+
+        </select>
+
+    </div>
+
+    <div class="col-md-3 d-flex align-items-end">
+
+        <button
+            type="submit"
+            class="btn btn-success w-100">
+
+            🔍 Search
+
+        </button>
+
+    </div>
+
+</form>
+
+<!-- Summary Cards -->
+
+<div class="row mb-4">
+
+    <div class="col-md-3">
+
+        <div class="card border-danger shadow">
+
+            <div class="card-body text-center">
+
+                <h5>Critical</h5>
+
+                <h2 class="text-danger">
+
+                    {{ critical_count }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card border-warning shadow">
+
+            <div class="card-body text-center">
+
+                <h5>Warning</h5>
+
+                <h2 class="text-warning">
+
+                    {{ warning_count }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card border-primary shadow">
+
+            <div class="card-body text-center">
+
+                <h5>Info</h5>
+
+                <h2 class="text-primary">
+
+                    {{ info_count }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card border-success shadow">
+
+            <div class="card-body text-center">
+
+                <h5>Total Open</h5>
+
+                <h2 class="text-success">
+
+                    {{ open_count }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="d-flex justify-content-between mb-3">
+
+    <div>
+
+        <strong>Total Alerts :</strong>
+
+        {{ page_obj.paginator.count }}
+
+    </div>
+
+    <div>
+
+        <strong>Page</strong>
+
+        {{ page_obj.number }}
+
+        of
+
+        {{ page_obj.paginator.num_pages }}
+
+    </div>
+
+</div>
+
+<div class="mb-3 text-end">
+
+    <a
+        href="{% url 'alerts:export_alerts_excel' %}?start_date={{ start }}&end_date={{ end }}&severity={{ severity }}"
+        class="btn btn-success">
+
+        📗 Export Excel
+
+    </a>
+
+        <a
+    href="{% url 'alerts:export_alerts_pdf' %}?start_date={{ start }}&end_date={{ end }}&severity={{ severity }}"
+    class="btn btn-danger">
+
+    📄 Export PDF
+
+    </a>
+
+</div>
+
+
+
+<!-- Alerts Table -->
+
+<div class="table-responsive">
+
+<table class="table table-bordered table-hover align-middle">
+
+    <thead class="table-dark">
+
+        <tr>
+
+            <th>Date & Time</th>
+
+            <th>Device</th>
+
+            <th>Alert</th>
+
+            <th>Severity</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+    {% for alert in page_obj %}
+
+        <tr>
+
+            <td>{{ alert.created_at }}</td>
+
+            <td>{{ alert.device.device_name }}</td>
+
+            <td>{{ alert.title }}</td>
+
+            <td>
+
+                {% if alert.severity == "CRITICAL" %}
+
+                    <span class="badge bg-danger">
+                        Critical
+                    </span>
+
+                {% elif alert.severity == "WARNING" %}
+
+                    <span class="badge bg-warning text-dark">
+                        Warning
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-primary">
+                        Info
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+    {% empty %}
+
+        <tr>
+
+            <td colspan="4" class="text-center">
+
+                No Alerts Found
+
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+<nav class="mt-4">
+
+<ul class="pagination justify-content-center">
+
+{% if page_obj.has_previous %}
+
+<li class="page-item">
+
+<a class="page-link"
+href="?page={{ page_obj.previous_page_number }}{% if start %}&start_date={{ start }}{% endif %}{% if end %}&end_date={{ end }}{% endif %}{% if severity %}&severity={{ severity }}{% endif %}">
+
+Previous
+
+</a>
+
+</li>
+
+{% endif %}
+
+<li class="page-item disabled">
+
+<span class="page-link">
+
+Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+
+</span>
+
+</li>
+
+{% if page_obj.has_next %}
+
+<li class="page-item">
+
+<a class="page-link"
+href="?page={{ page_obj.next_page_number }}{% if start %}&start_date={{ start }}{% endif %}{% if end %}&end_date={{ end }}{% endif %}{% if severity %}&severity={{ severity }}{% endif %}">
+
+Next
+
+</a>
+
+</li>
+
+{% endif %}
+
+</ul>
+
+</nav>
+
+</div>
+
+{% endblock %}

@@ -5,8 +5,9 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
+    initial = True
+
     dependencies = [
-        ('monitoring', '0001_initial'),
     ]
 
     operations = [
@@ -19,7 +20,7 @@ class Migration(migrations.Migration):
                 ('power', models.DecimalField(decimal_places=2, max_digits=8)),
                 ('temperature', models.DecimalField(decimal_places=2, max_digits=5)),
                 ('irradiance', models.DecimalField(decimal_places=2, max_digits=6)),
-                ('created_at', models.DateTimeField()),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
             ],
         ),
     ]

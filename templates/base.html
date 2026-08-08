@@ -20,13 +20,21 @@
 
 <body>
 
-{% include 'components/sidebar.html' %}
+<div id="sidebar">
+
+    {% include 'components/sidebar.html' %}
+
+</div>
 
 <div class="main-content">
 
-    {% include 'components/navbar.html' %}
+    <div id="navbar">
 
-    <div class="container-fluid mt-4">
+        {% include 'components/navbar.html' %}
+
+    </div>
+
+    <div id="report-content" class="container-fluid mt-4">
 
         {% block content %}
 

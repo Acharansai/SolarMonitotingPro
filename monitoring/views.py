@@ -1,22 +1,98 @@
-from django.shortcuts import render
-from monitoring.models import LiveSolarData
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404
 
-def dashboard(request):
-    latest = LiveSolarData.objects.order_by("-created_at").first()
-    data = LiveSolarData.objects.order_by("-created_at")[:20]
+from devices.models import Device
+from monitoring.models import SensorData
 
-    labels = [d.created_at.strftime("%H:%M:%S") for d in reversed(data)]
-    power_values = [float(d.power) for d in reversed(data)]
+
+@login_required
+def monitoring_dashboard(request):
+
+    devices = Device.objects.select_related("plant").all()
+
+    selected_device_id = request.GET.get("device")
+
+    selected_device = None
+    latest = None
+    readings = []
+
+    if selected_device_id:
+
+        selected_device = get_object_or_404(
+            Device,
+            pk=selected_device_id
+        )
+
+        latest = (
+            SensorData.objects
+            .filter(device=selected_device)
+            .order_by("-timestamp")
+            .first()
+        )
+
+        readings = list(
+            SensorData.objects
+            .filter(device=selected_device)
+            .order_by("-timestamp")[:20]
+        )
+
+        readings.reverse()
 
     context = {
-        "power": latest.power if latest else 0,
-        "voltage": latest.voltage if latest else 0,
-        "current": latest.current if latest else 0,
-        "temperature": latest.temperature if latest else 0,
-        "irradiance": latest.irradiance if latest else 0,
-        "created_at": latest.created_at if latest else "",
-        "labels": labels,
-        "power_values": power_values,
+        "devices": devices,
+        "selected_device": selected_device,
+        "latest": latest,
+        "readings": readings,
     }
 
-    return render(request, "dashboard.html", context)
+    return render(
+        request,
+        "monitoring/monitoring.html",
+        context
+    )
+
+
+@login_required
+def monitoring_live_data(request):
+
+    device_id = request.GET.get("device")
+
+    if not device_id:
+        return JsonResponse({
+            "error": "Device ID is required"
+        }, status=400)
+
+    latest = (
+        SensorData.objects
+        .filter(device_id=device_id)
+        .order_by("-timestamp")
+        .first()
+    )
+
+    if not latest:
+        return JsonResponse({
+            "error": "No data available"
+        }, status=404)
+
+    return JsonResponse({
+
+        "voltage": float(latest.voltage),
+
+        "current": float(latest.current),
+
+        "power": float(latest.power),
+
+        "energy": float(latest.energy),
+
+        "temperature": float(latest.temperature),
+
+        "frequency": float(latest.frequency),
+
+        "power_factor": float(latest.power_factor),
+
+        "timestamp": latest.timestamp.strftime(
+            "%Y-%m-%d %H:%M:%S"
+        ),
+
+    })

@@ -1,0 +1,642 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="fw-bold mb-4">
+    ⚡ Live Monitoring
+</h2>
+
+
+<!-- Device Selection -->
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <form method="GET">
+
+            <div class="row align-items-end">
+
+                <div class="col-md-8">
+
+                    <label class="form-label fw-bold">
+                        Select Device
+                    </label>
+
+                    <select
+                        name="device"
+                        class="form-select">
+
+                        <option value="">
+                            -- Select Device --
+                        </option>
+
+                        {% for device in devices %}
+
+                            <option
+                                value="{{ device.id }}"
+                                {% if selected_device and selected_device.id == device.id %}
+                                    selected
+                                {% endif %}>
+
+                                {{ device.plant.plant_name }}
+                                -
+                                {{ device.device_name }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary w-100">
+
+                        ⚡ Monitor Device
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+{% if selected_device %}
+
+
+<!-- Selected Device -->
+
+<div class="alert alert-info">
+
+    <strong>
+        Monitoring:
+    </strong>
+
+    {{ selected_device.device_name }}
+
+    |
+
+    {{ selected_device.plant.plant_name }}
+
+</div>
+
+
+<!-- Live Values -->
+
+<div class="row g-3 mb-4">
+
+
+    <!-- Voltage -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card shadow-sm border-primary">
+
+            <div class="card-body text-center">
+
+                <h6 class="text-muted">
+                    Voltage
+                </h6>
+
+                <h2 id="voltage">
+
+                    {% if latest %}
+                        {{ latest.voltage }}
+                    {% else %}
+                        0
+                    {% endif %}
+
+                </h2>
+
+                <span>
+                    V
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Current -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card shadow-sm border-success">
+
+            <div class="card-body text-center">
+
+                <h6 class="text-muted">
+                    Current
+                </h6>
+
+                <h2 id="current">
+
+                    {% if latest %}
+                        {{ latest.current }}
+                    {% else %}
+                        0
+                    {% endif %}
+
+                </h2>
+
+                <span>
+                    A
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Power -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card shadow-sm border-warning">
+
+            <div class="card-body text-center">
+
+                <h6 class="text-muted">
+                    Power
+                </h6>
+
+                <h2 id="power">
+
+                    {% if latest %}
+                        {{ latest.power }}
+                    {% else %}
+                        0
+                    {% endif %}
+
+                </h2>
+
+                <span>
+                    W
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Temperature -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card shadow-sm border-danger">
+
+            <div class="card-body text-center">
+
+                <h6 class="text-muted">
+                    Temperature
+                </h6>
+
+                <h2 id="temperature">
+
+                    {% if latest %}
+                        {{ latest.temperature }}
+                    {% else %}
+                        0
+                    {% endif %}
+
+                </h2>
+
+                <span>
+                    °C
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Additional Values -->
+
+<div class="row g-3 mb-4">
+
+
+    <!-- Energy -->
+
+    <div class="col-md-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body text-center">
+
+                <h6 class="text-muted">
+                    Energy
+                </h6>
+
+                <h3 id="energy">
+
+                    {% if latest %}
+                        {{ latest.energy }}
+                    {% else %}
+                        0
+                    {% endif %}
+
+                </h3>
+
+                <span>
+                    kWh
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Frequency -->
+
+    <div class="col-md-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body text-center">
+
+                <h6 class="text-muted">
+                    Frequency
+                </h6>
+
+                <h3 id="frequency">
+
+                    {% if latest %}
+                        {{ latest.frequency }}
+                    {% else %}
+                        0
+                    {% endif %}
+
+                </h3>
+
+                <span>
+                    Hz
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Power Factor -->
+
+    <div class="col-md-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body text-center">
+
+                <h6 class="text-muted">
+                    Power Factor
+                </h6>
+
+                <h3 id="power_factor">
+
+                    {% if latest %}
+                        {{ latest.power_factor }}
+                    {% else %}
+                        0
+                    {% endif %}
+
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Last Updated -->
+
+<div class="mb-3">
+
+    <strong>
+        Last Updated:
+    </strong>
+
+    <span id="timestamp">
+
+        {% if latest %}
+            {{ latest.timestamp|date:"Y-m-d H:i:s" }}
+        {% else %}
+            --
+        {% endif %}
+
+    </span>
+
+</div>
+
+
+<!-- Live Power Chart -->
+
+<div class="card shadow-sm">
+
+    <div class="card-header">
+
+        <strong>
+            📈 Live Power
+        </strong>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="chart-container">
+
+            <canvas id="powerChart"></canvas>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Automatic Live Update -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        const deviceId = "{{ selected_device.id }}";
+
+
+        /*
+         * Initial chart data
+         */
+
+        const labels = [
+
+            {% for reading in readings %}
+
+                "{{ reading.timestamp|date:'H:i:s' }}",
+
+            {% endfor %}
+
+        ];
+
+
+        const powerValues = [
+
+            {% for reading in readings %}
+
+                {{ reading.power }},
+
+            {% endfor %}
+
+        ];
+
+
+        /*
+         * Create Chart
+         */
+
+        const ctx = document
+            .getElementById("powerChart")
+            .getContext("2d");
+
+
+        const powerChart = new Chart(
+            ctx,
+            {
+
+                type: "line",
+
+                data: {
+
+                    labels: labels,
+
+                    datasets: [
+
+                        {
+
+                            label: "Power (W)",
+
+                            data: powerValues,
+
+                            tension: 0.3,
+
+                            borderWidth: 2
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    animation: false,
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero: true
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+
+        /*
+         * Get latest data
+         */
+
+        function updateLiveData() {
+
+
+            fetch(
+                "{% url 'monitoring:live_data' %}?device="
+                + deviceId
+            )
+
+            .then(
+                function (response) {
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            "HTTP Error: "
+                            + response.status
+                        );
+
+                    }
+
+                    return response.json();
+
+                }
+            )
+
+            .then(
+                function (data) {
+
+
+                    if (data.error) {
+
+                        console.error(
+                            data.error
+                        );
+
+                        return;
+
+                    }
+
+
+                    /*
+                     * Update values
+                     */
+
+                    document.getElementById(
+                        "voltage"
+                    ).innerText = data.voltage;
+
+
+                    document.getElementById(
+                        "current"
+                    ).innerText = data.current;
+
+
+                    document.getElementById(
+                        "power"
+                    ).innerText = data.power;
+
+
+                    document.getElementById(
+                        "temperature"
+                    ).innerText = data.temperature;
+
+
+                    document.getElementById(
+                        "energy"
+                    ).innerText = data.energy;
+
+
+                    document.getElementById(
+                        "frequency"
+                    ).innerText = data.frequency;
+
+
+                    document.getElementById(
+                        "power_factor"
+                    ).innerText = data.power_factor;
+
+
+                    document.getElementById(
+                        "timestamp"
+                    ).innerText = data.timestamp;
+
+
+                    /*
+                     * Update chart
+                     */
+
+                    powerChart.data.labels.push(
+                        data.timestamp.substring(11)
+                    );
+
+
+                    powerChart.data.datasets[0]
+                        .data.push(
+                            data.power
+                        );
+
+
+                    /*
+                     * Keep only latest 20 points
+                     */
+
+                    if (
+                        powerChart.data.labels.length > 20
+                    ) {
+
+                        powerChart.data.labels.shift();
+
+                        powerChart.data.datasets[0]
+                            .data.shift();
+
+                    }
+
+
+                    powerChart.update();
+
+                }
+            )
+
+            .catch(
+                function (error) {
+
+                    console.error(
+                        "Monitoring update error:",
+                        error
+                    );
+
+                }
+            );
+
+        }
+
+
+        /*
+         * Run immediately
+         */
+
+        updateLiveData();
+
+
+        /*
+         * Automatically update every 5 seconds
+         */
+
+        setInterval(
+            updateLiveData,
+            5000
+        );
+
+
+    }
+);
+
+</script>
+
+
+{% endif %}
+
+{% endblock %}

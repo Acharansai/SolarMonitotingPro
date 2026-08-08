@@ -38,6 +38,18 @@ class Alert(models.Model):
         default="OPEN"
     )
 
+    # Actual value that triggered the alert
+    actual_value = models.FloatField(
+        null=True,
+        blank=True
+    )
+
+    # Threshold value
+    threshold_value = models.FloatField(
+        null=True,
+        blank=True
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     resolved_at = models.DateTimeField(
@@ -49,4 +61,4 @@ class Alert(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return self.title
+        return f"{self.device.device_name} - {self.title}"

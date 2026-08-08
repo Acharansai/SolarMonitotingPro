@@ -8,17 +8,23 @@ from .forms import LoginForm
 def login_view(request):
 
     if request.user.is_authenticated:
-        return redirect("dashboard:home")
+        return redirect("monitoring:dashboard")
+
 
     form = LoginForm()
 
+
     if request.method == "POST":
+
         form = LoginForm(request.POST)
+
 
         if form.is_valid():
 
             username = form.cleaned_data["username"]
+
             password = form.cleaned_data["password"]
+
 
             user = authenticate(
                 request,
@@ -26,17 +32,35 @@ def login_view(request):
                 password=password
             )
 
+
             if user is not None:
+
                 login(request, user)
-                return redirect("dashboard:home")
 
-            messages.error(request, "Invalid username or password.")
+                return redirect(
+                    "monitoring:dashboard"
+                )
 
-    return render(request, "accounts/login.html", {
-        "form": form
-    })
+
+            messages.error(
+                request,
+                "Invalid username or password."
+            )
+
+
+    return render(
+        request,
+        "accounts/login.html",
+        {
+            "form": form
+        }
+    )
 
 
 def logout_view(request):
+
     logout(request)
-    return redirect("accounts:login")
+
+    return redirect(
+        "accounts:login"
+    )

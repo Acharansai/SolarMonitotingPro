@@ -1,0 +1,256 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2 class="fw-bold mb-1">
+            🖥️ {{ device.device_name }}
+        </h2>
+
+        <p class="text-muted mb-0">
+            Device Details
+        </p>
+    </div>
+
+    <div class="d-flex gap-2">
+
+        <a
+            href="{% url 'devices:device_update' device.pk %}"
+            class="btn btn-warning">
+
+            ✏️ Edit
+
+        </a>
+
+        <a
+            href="{% url 'devices:device_list' %}"
+            class="btn btn-secondary">
+
+            ← Back
+
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- Device Information -->
+
+<div class="row mb-4">
+
+    <div class="col-md-4 mb-3">
+
+        <div class="card shadow-sm h-100">
+
+            <div class="card-body">
+
+                <h6 class="text-muted">
+                    Device Name
+                </h6>
+
+                <h4 class="fw-bold">
+                    {{ device.device_name }}
+                </h4>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-4 mb-3">
+
+        <div class="card shadow-sm h-100">
+
+            <div class="card-body">
+
+                <h6 class="text-muted">
+                    Solar Plant
+                </h6>
+
+                <h4 class="fw-bold">
+                    {{ device.plant.plant_name }}
+                </h4>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-4 mb-3">
+
+        <div class="card shadow-sm h-100">
+
+            <div class="card-body">
+
+                <h6 class="text-muted">
+                    Device Type
+                </h6>
+
+                <h4 class="fw-bold">
+                    {{ device.get_device_type_display }}
+                </h4>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Technical Information -->
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header">
+
+        <h5 class="mb-0">
+            ⚙️ Technical Information
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+
+                <strong>
+                    Serial Number
+                </strong>
+
+                <br>
+
+                {{ device.serial_number }}
+
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+
+                <strong>
+                    Manufacturer
+                </strong>
+
+                <br>
+
+                {{ device.manufacturer }}
+
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+
+                <strong>
+                    Model
+                </strong>
+
+                <br>
+
+                {{ device.model }}
+
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+
+                <strong>
+                    Installed On
+                </strong>
+
+                <br>
+
+                {{ device.installed_on }}
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <strong>
+                    Status
+                </strong>
+
+                <br>
+
+                {% if device.status == "ONLINE" %}
+
+                    <span class="badge bg-success">
+                        🟢 Online
+                    </span>
+
+                {% elif device.status == "OFFLINE" %}
+
+                    <span class="badge bg-danger">
+                        🔴 Offline
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-warning text-dark">
+                        🟡 Maintenance
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Actions -->
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <h5 class="mb-3">
+            Device Management
+        </h5>
+
+        <div class="d-flex gap-2 flex-wrap">
+
+            <a
+                href="{% url 'devices:device_update' device.pk %}"
+                class="btn btn-warning">
+
+                ✏️ Edit Device
+
+            </a>
+
+            <a
+                href="{% url 'devices:device_delete' device.pk %}"
+                class="btn btn-danger">
+
+                🗑️ Delete Device
+
+            </a>
+
+            <a
+                href="{% url 'devices:plant_detail' device.plant.pk %}"
+                class="btn btn-secondary">
+
+                🌞 View Solar Plant
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

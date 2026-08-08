@@ -41,6 +41,8 @@ class LiveSolarData(models.Model):
     irradiance = models.DecimalField(max_digits=6, decimal_places=2)
     created_at = models.DateTimeField()
 
+    '''
     class Meta:
         managed = False
         db_table = "solar_data"
+    '''

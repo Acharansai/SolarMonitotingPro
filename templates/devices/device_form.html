@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-7 col-md-9">
+
+        <div class="card shadow-sm">
+
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    🖥️ {{ title }}
+                </h4>
+            </div>
+
+            <div class="card-body">
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+
+                    <!-- Solar Plant -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Solar Plant
+                        </label>
+
+                        {{ form.plant }}
+
+                        {% for error in form.plant.errors %}
+                            <div class="text-danger small">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Device Name -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Device Name
+                        </label>
+
+                        {{ form.device_name }}
+
+                        {% for error in form.device_name.errors %}
+                            <div class="text-danger small">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Serial Number -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Serial Number
+                        </label>
+
+                        {{ form.serial_number }}
+
+                        {% for error in form.serial_number.errors %}
+                            <div class="text-danger small">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Manufacturer -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Manufacturer
+                        </label>
+
+                        {{ form.manufacturer }}
+
+                        {% for error in form.manufacturer.errors %}
+                            <div class="text-danger small">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Model -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Model
+                        </label>
+
+                        {{ form.model }}
+
+                        {% for error in form.model.errors %}
+                            <div class="text-danger small">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Device Type -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Device Type
+                        </label>
+
+                        {{ form.device_type }}
+
+                        {% for error in form.device_type.errors %}
+                            <div class="text-danger small">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Status -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Status
+                        </label>
+
+                        {{ form.status }}
+
+                        {% for error in form.status.errors %}
+                            <div class="text-danger small">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Installed Date -->
+
+                    <div class="mb-4">
+
+                        <label class="form-label">
+                            Installed On
+                        </label>
+
+                        {{ form.installed_on }}
+
+                        {% for error in form.installed_on.errors %}
+                            <div class="text-danger small">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Buttons -->
+
+                    <div class="d-flex gap-2">
+
+                        <button
+                            type="submit"
+                            class="btn btn-success">
+
+                            💾 Save Device
+
+                        </button>
+
+                        <a
+                            href="{% url 'devices:device_list' %}"
+                            class="btn btn-secondary">
+
+                            Cancel
+
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
